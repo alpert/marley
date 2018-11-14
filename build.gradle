@@ -45,14 +45,14 @@ compileTestKotlin {
 task run(type: JavaExec) {
     classpath = files("build/libs/${rootProject.name}-${version}.jar")
     classpath += sourceSets.main.runtimeClasspath
-    main = 'com.github.alpert.MeetingBotKt'
+    main = 'com.github.alpert.StandupBotKt'
     dependsOn assemble
 }
 
 task stage(type: Jar, dependsOn: [clean, jar]) {
     archiveName = "${rootProject.name}.jar"
     manifest {
-        attributes 'Main-Class': 'com.github.alpert.MeetingBotKt'
+        attributes 'Main-Class': 'com.github.alpert.StandupBotKt'
     }
 
     from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
