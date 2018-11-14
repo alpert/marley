@@ -1,0 +1,11 @@
+{
+  "name": "Marley",
+  "description": "A bot for starting stand up meetings",
+  "repository": "https://github.com/alpert/marley",
+  "keywords": ["bot", "kotlin", "slack"],
+  "env": {
+    "SLACK_TOKEN": {
+      "description": "The token for marley bot of Bots application (https://slack.com/apps/A0F7YS25R-bots)."
+    }
+  }
+}

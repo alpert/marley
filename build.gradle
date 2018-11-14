@@ -1,0 +1,60 @@
+buildscript {
+    ext.kotlin_version = '1.2.30'
+    ext.slackapi_version = '1.2.0'
+    ext.slf4j_version = '1.7.25'
+    ext.mockk_version = '1.8.12.kotlin13'
+    ext.junit_version = '5.1.1'
+    ext.assertj_version = '3.11.1'
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+group 'com.github.alpert'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'kotlin'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compile "com.ullink.slack:simpleslackapi:$slackapi_version"
+    compile "org.slf4j:slf4j-simple:$slf4j_version"
+
+    testImplementation "io.mockk:mockk:$mockk_version"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
+    testImplementation "org.assertj:assertj-core:$assertj_version"
+
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+task run(type: JavaExec) {
+    classpath = files("build/libs/${rootProject.name}-${version}.jar")
+    classpath += sourceSets.main.runtimeClasspath
+    main = 'com.github.alpert.MeetingBotKt'
+    dependsOn assemble
+}
+
+task stage(type: Jar, dependsOn: [clean, jar]) {
+    archiveName = "${rootProject.name}.jar"
+    manifest {
+        attributes 'Main-Class': 'com.github.alpert.MeetingBotKt'
+    }
+
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    from "$buildDir/classes/kotlin/main"
+}
